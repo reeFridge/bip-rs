@@ -51,7 +51,7 @@ pub enum PieceLength {
 
 /// Builder for generating a torrent file from some accessor.
 pub struct MetainfoBuilder<'a> {
-    root: BencodeMut<'a>,
+    pub root: BencodeMut<'a>,
     info: InfoBuilder<'a>
 }
 
@@ -127,8 +127,12 @@ impl<'a> MetainfoBuilder<'a> {
         {
             let dict_access = self.root.dict_mut().unwrap();
             opt_comment
-                .and_then(|comment| dict_access.insert(parse::COMMENT_KEY.into(), ben_bytes!(comment)))
-                .or_else(|| dict_access.remove(parse::COMMENT_KEY));
+                .and_then(|comment| {
+                    println!("{}", comment);
+                    dict_access.insert(parse::COMMENT_KEY.into(), ben_bytes!(comment))
+                });
+                // Uncomment to reproduce bug
+                //.or_else(|| dict_access.remove(parse::COMMENT_KEY));
         }
 
         self
